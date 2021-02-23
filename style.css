@@ -1,5 +1,7 @@
 * {
     box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 body {
     background-color:#EEE;
@@ -20,7 +22,7 @@ header {
     top:0;
     right:0;
     height:60px;
-    background-color:#399ade;
+    background-color:rgba(223, 33, 19, 0.767);
     display:none;
     justify-content: flex-end;
     align-items: center;
@@ -28,7 +30,7 @@ header {
 .menu-openner {
     margin-right: 15px;
     font-size: 26px;
-    background-color: #a9dcff;
+    background-color: rgba(223, 33, 19, 0.89);
     padding: 5px 20px;
     border-radius: 5px;
 }
@@ -40,6 +42,7 @@ header {
     height:32px;
     display:none;
     font-size: 30px;
+    margin-bottom: 20px;
 }
 
 aside {
@@ -57,10 +60,15 @@ aside.show {
 }
 main {
     flex:1;
-    padding:20px;
 }
-h1 {
+.title {
     font-family:'Hepta Slab', Helvetica, Arial;
+    font-size: 40px;
+    height: 80px;
+    line-height: 80px;
+    padding-left: 10px;
+    background: rgba(223, 33, 19, 0.767);
+    margin-bottom: 20px;
 }
 .pizza-area {
     display:grid;
@@ -342,6 +350,15 @@ h1 {
     body {
         flex-direction: column;
     }
+
+    a:nth-child(1) {
+        margin-top: 50px;
+    }
+
+    .title {
+        display: none;
+    }
+
     .pizza-area {
         display:block;
     }

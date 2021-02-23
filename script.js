@@ -104,14 +104,35 @@ document.querySelector('.pizzaInfo--addButton').addEventListener('click', () => 
     closeModal();
 });
 
+
+//Função para abrir/fechar o modal em dispositivos mobile
+document.querySelector('.menu-openner').addEventListener('click', () => {
+    if(cart.length > 0) {
+        document.querySelector('aside').style.left = '0';
+    }
+});
+document.querySelector('aside .menu-closer').addEventListener('click', () => {
+    document.querySelector('aside').style.left = '100vw';
+});
+
+let total;
+
 //função de atualização do carrinho
 const updateCart = () => {
+    document.querySelector('.menu-openner span').innerHTML = cart.length;
+
     if(cart.length > 0) {
         document.querySelector('aside').classList.add('show');
         document.querySelector('.cart').innerHTML = "";
 
+        let subtotal = 0;
+        let discount = 0;
+        total = 0;
+
         for(let i in cart) {
             let pizzaItem = pizzaJson.find(item => item.id === cart[i].id);
+            subtotal += pizzaItem.price * cart[i].quantity;
+
             let cartItem = document.querySelector('.models .cart--item').cloneNode(true);
 
             let pizzaSizeName;
@@ -131,12 +152,58 @@ const updateCart = () => {
             cartItem.querySelector('img').src = pizzaItem.img;
             cartItem.querySelector('.cart--item-nome').innerHTML = pizzaName;
             cartItem.querySelector('.cart--item--qt').innerHTML = cart[i].quantity;
+            cartItem.querySelector('.cart--item-qtmenos').addEventListener('click', () => {
+                if(cart[i].quantity > 1) {
+                    cart[i].quantity--;
+                }else {
+                    cart.splice(i, 1);
+                }
+                updateCart();
+            });
+            cartItem.querySelector('.cart--item-qtmais').addEventListener('click', () => {
+                cart[i].quantity++;
+                updateCart();
+            });
 
             document.querySelector('.cart').append(cartItem);
 
         }
 
+        discount = subtotal * 0.1;
+        total = subtotal - discount;
+
+        document.querySelector('.subtotal span:last-child').innerHTML = `R$ ${subtotal.toFixed(2)}`;
+        document.querySelector('.desconto span:last-child').innerHTML = `R$ ${discount.toFixed(2)}`;
+        document.querySelector('.total span:last-child').innerHTML = `R$ ${total.toFixed(2)}`;
+
     }else {
         document.querySelector('aside').classList.remove('show');
+        document.querySelector('aside').style.left = '100vw';
     }
 }
+
+document.querySelector('.cart--finalizar').addEventListener('click', () => {
+    Swal.fire({
+        title: `Valor final: R$ ${total.toFixed(2)}`,
+        text: "Você deseja confirmar a sua compra?",
+        icon: 'question',
+        showCancelButton: true,
+        cancelButtonColor: 'red',
+        cancelButtonText: 'Cancelar!',
+        confirmButtonColor: 'green',
+        confirmButtonText: 'Sim, confirmar!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire(
+                    `Compra realizada com sucesso!`,
+                    '',
+                    'success'
+                )
+                document.querySelector('aside').classList.remove('show');
+                document.querySelector('aside').style.left = '100vw';
+                cart = [];
+                document.querySelector('.menu-openner span').innerHTML = 0;
+            }
+        });
+
+});
